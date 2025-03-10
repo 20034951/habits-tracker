@@ -1,79 +1,36 @@
-# habits-tracker
-Habits Tracker App
-Aplicación para registro de habitos
-Actividad 01 Programación Avanzada
+Este es un proyecto de [Next.js](https://nextjs.org) generado con [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-## Requisitos Previos
+## Empezando
 
-Antes de ejecutar la aplicación, asegúrate de tener instalado lo siguiente:
+Primero, ejecuta el servidor de desarrollo:
 
-- [Node.js](https://nodejs.org/) (versión recomendada: 20.x o superior)
-- [npm](https://www.npmjs.com/) (incluido con Node.js)
-
-## Instalación
-
-1. Clona el repositorio:
-
-   ```sh
-   git clone https://github.com/20034951/habits-tracker.git
-   ```
-
-2. Entra en el directorio del proyecto:
-
-   ```sh
-   cd <nombre-del-proyecto>
-   ```
-
-3. Instala las dependencias:
-
-   ```sh
-   npm install
-   ```
-
-## Ejecución
-
-Para iniciar la aplicación en modo desarrollo, usa el siguiente comando:
-
-```sh
-npm start
+```bash
+npm run dev
+# o
+yarn dev
+# o
+pnpm dev
+# o
+bun dev
 ```
 
-## Configuración
+Abre [http://localhost:3000](http://localhost:3000) en tu navegador para ver el resultado.
 
-Está aplicación requiere variables de entorno, créalas en un archivo `.env` en la raíz del proyecto. Ejemplo:
+Puedes comenzar a editar la página modificando `app/page.tsx`. La página se actualizará automáticamente a medida que edites el archivo.
 
-```ini
-PORT=3001
-DATABASE_URL=mongodb://localhost:27017/mi_basededatos
-```
+Este proyecto usa [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) para optimizar y cargar automáticamente [Geist](https://vercel.com/font), una nueva familia tipográfica para Vercel.
 
-## Construcción y Despliegue
+## Aprende más
 
-Si necesitas construir la aplicación para producción, usa:
+Para aprender más sobre Next.js, consulta los siguientes recursos:
 
-```sh
-npm run build
-```
+- [Documentación de Next.js](https://nextjs.org/docs) - Aprende sobre las características y la API de Next.js.
+- [Aprende Next.js](https://nextjs.org/learn) - Un tutorial interactivo de Next.js.
 
-Para ejecutarla en producción:
+Puedes revisar [el repositorio de GitHub de Next.js](https://github.com/vercel/next.js) - ¡tus comentarios y contribuciones son bienvenidos!
 
-```sh
-npm run start:prod
-```
+## Desplegar en Vercel
 
-## Pruebas TBD
+La forma más fácil de desplegar tu aplicación Next.js es usar la [Plataforma Vercel](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) de los creadores de Next.js.
 
-Para ejecutar las pruebas:
-
-```sh
-npm test
-```
-
-## Contribución
-
-Si deseas contribuir, por favor abre un issue o envía un pull request.
-
-## Licencia
-
-Este proyecto está bajo la licencia [MIT](LICENSE).
-
+Consulta nuestra [documentación de despliegue de Next.js](https://nextjs.org/docs/app/building-your-application/deploying) para más detalles.
