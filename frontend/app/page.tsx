@@ -4,8 +4,7 @@ import { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchHabitsThunk } from "../features/habit/habitSlice";
 import { RootState, AppDispatch } from '../redux/store';
-import Habits from "./habits";
-
+import Habits from '@/app/habits';
 
 export default function Home() {
   const dispatch = useDispatch<AppDispatch>();
@@ -16,14 +15,15 @@ export default function Home() {
   }, [dispatch]);
   if(!habits.length){
     return (
-      <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-        Loading habits...
+      <div className="pt-12 flex flex-col gap-4 items-center">
+        <div className="w-full max-w-md p-4 bg-white rounded-lg shadow-md mt-8">
+          <h1 className="text-2xl text-black font-bold mb-4">Lista de Hábitos</h1>
+          <p className="text-sm text-gray-600 line-clamp-2">Cargando hábitos ... </p>
+        </div>
       </div>
     )
   }
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+    return (
       <Habits habits={habits}/>
-    </div>
-  );
+    );
 }
