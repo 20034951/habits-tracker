@@ -52,19 +52,22 @@ router.delete('/habits/:id', async(req, res) => {
 router.patch('/habits/done/:id', async(req, res) => {
   try{
     const habit = await Habit.findById(req.params.id);
-    habit.lastDone = new Date();
+    let message = 'Habit marked as done';
+    
     if(timeDifferenceInHours(habit.lastDone, habit.lastUpdate) < 24){
-      habit.days = timeDifferenceInDays(habit.lastDone, habit.startedAt);
-      habit.lastUpdate = new Date();
-      await habit.save();
-      res.status(200).json({message: 'Habit marked as done'});
+      habit.days += 1;//timeDifferenceInDays(habit.lastDone, habit.startedAt);
     }else{
       habit.days = 1;
-      habit.lastUpdate = new Date();
       habit.startedAt = new Date();
-      await habit.save();
-      res.status(200).json({ message: 'Habit restarted' })
-    }  
+      message = 'Habit restarted';
+    } 
+    
+    habit.lastUpdate = new Date();
+    habit.lastDone = new Date();
+
+    await habit.save();
+    res.status(200).json({message: message});
+    
   }catch(err){
     console.error("Error setting habit to done ->", err);
     res.status(500).json({ error: 'Error setting habit to done' })
@@ -74,11 +77,6 @@ router.patch('/habits/done/:id', async(req, res) => {
 const timeDifferenceInHours = (date1, date2) => {
   const differenceMS = Math.abs(date1 - date2);
   return differenceMS / (1000 * 3600);
-}
-
-const timeDifferenceInDays = (date1, date2) => {
-  const differenceMS = Math.abs(date1 - date2);
-  return Math.floor(differenceMS / (1000 * 3600 * 24));
 }
 
 module.exports = router;

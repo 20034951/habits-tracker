@@ -47,6 +47,24 @@ export const markAsDoneThunk = createAsyncThunk('habit/done', async (id: string,
     
 });
 
+export const calculateProgress = (days: number): string => {
+    const progress = Math.min((days / 66) * 100, 100);
+    return `${progress.toFixed(2)}%`;
+}
+
+const timeDifferenceInDays = (date1: any, date2: any) => {
+    const differenceMS = Math.abs(date1 - date2);
+    return Math.floor(differenceMS / (1000 * 3600 * 24));
+  }
+
+export const isDoneDisabled = (lastUpdate: string): boolean => {
+    const todayDate = new Date();
+    const lastUpdatedDate = new Date(lastUpdate);
+    const disabled = timeDifferenceInDays(todayDate, lastUpdatedDate) === 0;
+    console.log(`todayDate = ${todayDate} | lastUpdatedDate = ${lastUpdatedDate} | isDisabled = ${disabled}`);
+    return disabled;
+}
+
 const habitSlice = createSlice({
     name: 'habits',
     initialState,
@@ -76,7 +94,3 @@ const habitSlice = createSlice({
 
 export const { getHabits, addHabit, removeHabit } = habitSlice.actions;
 export default habitSlice.reducer;
-
-function habitId(habitId: any) {
-    throw new Error('Function not implemented.');
-}

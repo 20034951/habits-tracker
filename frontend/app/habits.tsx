@@ -1,8 +1,7 @@
 import { useSelector, useDispatch } from 'react-redux';
-import { fetchHabitsThunk, markAsDoneThunk } from '../features/habit/habitSlice';
+import { fetchHabitsThunk, markAsDoneThunk, calculateProgress, isDoneDisabled } from '../features/habit/habitSlice';
 import { RootState, AppDispatch } from '../redux/store';
 import { toast } from 'react-hot-toast';
-
 
 type Habit = {
     _id: string;
@@ -14,6 +13,7 @@ type Habit = {
     lastUpdate: string;
     lastDone: string;
 }
+
 type HabitsProps = {
     habits: Habit[];
 }
@@ -26,23 +26,6 @@ const handleMarkAsDone = async (id: string, dispatch: AppDispatch) => {
     }catch(error){
         toast.error(`${error}`);
     }
-}
-
-const calcularProgreso = (createdAt: string) => {
-    const daysToCreateAHabit = 66;
-    const createdDate = new Date(createdAt);
-    const currentDate = new Date();
-    const differenceInTime = currentDate.getTime() - createdDate.getTime();
-    const differenceInDays = differenceInTime / (1000 * 3600 * 24);
-
-    let progress = (differenceInDays / daysToCreateAHabit) * 100;
-    progress = Math.min(Math.max(progress, 0), 100); //Debe estar entre 0 y 100;
-
-    return `${progress.toFixed(2)}%`;
-}
-
-const calculateProgress = (days: number): number => {
-    return Math.min((days / 66) * 100, 100);
 }
 
 export default function Habits({habits}: HabitsProps){
@@ -60,6 +43,7 @@ export default function Habits({habits}: HabitsProps){
                     //const progreso = calcularProgreso(habit.createdAt);
                     //<progress className='bg-orange-500 h-2 rounded-full' value={progress} max='100'></progress>    
                     const progress = calculateProgress(habit.days);
+                    const buttonDisabled = isDoneDisabled(habit.lastUpdate);
                     return (
                         <li key={habit._id} className="flex items-center justify-between">
                         <div className="w-96 h-40 bg-white shadow-lg rounded-2xl p-4 flex justify-between items-center border border-gray-200">
@@ -72,13 +56,20 @@ export default function Habits({habits}: HabitsProps){
                                     <div className="bg-orange-500 h-2 rounded-full" style={{ width: progress }}></div>
                                 </div>
                             </div>                
-                            <button className="ml-4 w-24 h-10 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-400 transition flex items-center justify-center"
-                            onClick={() => handleMarkAsDone(habit._id, dispatch)}>
-                                {status[habit._id] === 'loading' ? 'Processing' : 'Mark as Done'}
-                            </button>    
+                            <button className={`ml-4 w-24 h-10 text-white text-sm font-medium rounded-lg transition flex items-center justify-center 
+                                    ${buttonDisabled ? 'bg-gray-400 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-400'}`}
+                                    onClick={() => handleMarkAsDone(habit._id, dispatch)} disabled={buttonDisabled}>
+                                {status[habit._id] === 'loading' ? 'Processing' : 'Mark as Done'}    
+                            </button>          
                         </div>
                         </li>
                     );
+
+                    /*
+                    {status[habit._id]==='failed' && handleNotificationResult(error[habit._id], 'failed')};
+                    {status[habit._id]==='success' && handleNotificationResult(status[habit._id], 'success')};
+                    */
+
                     })}
                 </ul>
             </div>
