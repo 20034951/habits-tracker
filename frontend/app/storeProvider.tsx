@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import { Provider } from 'react-redux';
 import { AppStore, makeStore } from '../redux/store';
+import { Toaster } from 'react-hot-toast';
 
 export default function StoreProvider({ children } : { children: React.ReactNode }) {
     const store = useRef<AppStore | null>(null);
@@ -10,6 +11,9 @@ export default function StoreProvider({ children } : { children: React.ReactNode
         store.current = makeStore();
     }
     return (
+        <>
+        <Toaster position="top-right" reverseOrder={false} />
         <Provider store={store.current}>{children}</Provider>
+        </>
     );
 }
