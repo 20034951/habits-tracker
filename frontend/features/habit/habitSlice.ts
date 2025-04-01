@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import { fetchHabits, markHabitAsDone } from './habitApi';
+import { fetchHabits, addHabit, markHabitAsDone } from './habitApi';
 
 type Habit = {
     _id: string;
@@ -10,6 +10,17 @@ type Habit = {
     startedAt: string;
     lastUpdate: string;
     lastDone: string;
+}
+
+type MarkHabitAsDoneParams = {
+    _id: string,
+    token: string
+}
+
+type AddHabitParams = {
+    token: string,
+    title: string,
+    description: string
 }
 
 type HabitState = {
@@ -25,26 +36,40 @@ const initialState: HabitState = {
     error: {}
 }
 
-export const fetchHabitsThunk = createAsyncThunk('habit/fetchHabits', async () => {
-    const response = await fetchHabits();
-    console.log('response fetchHabitsThunk habitSlice -> ', response);
+export const fetchHabitsThunk = createAsyncThunk('habit/fetchHabits', async (token : string) => {
+    const response = await fetchHabits(token);
+    console.log(`response fetchHabitsThunk habitSlice ->  ${response}`);
     return response;
 });
 
-export const markAsDoneThunk = createAsyncThunk('habit/done', async (id: string, { rejectWithValue }) => {
+export const addHabitThunk = createAsyncThunk('habit/addHabit', async ({token, title, description} : AddHabitParams, { rejectWithValue }) => {
     try{
-        const response = await markHabitAsDone(id);
-        console.log('response markAsDoneThunk  habitSlice -> ', response);
-
-        if(response.message === "Habit restarted"){
-            return rejectWithValue(response.message);
+        const response = await addHabit(token, title, description);
+        console.log(`response addHabitThunk habitSlice ->  ${response}`);
+        
+        if(response.error === 'Error creating habit, access denied'){
+            return rejectWithValue(response.error);
         }
 
-        return response.message;
+        return response;
+    }catch(error){
+        return rejectWithValue('Failed to create habit');
+    }    
+});
+
+export const markAsDoneThunk = createAsyncThunk('habit/done', async ({_id, token} : MarkHabitAsDoneParams, { rejectWithValue }) => {
+    try{
+        const response = await markHabitAsDone(_id, token);
+        console.log(`response markAsDoneThunk  habitSlice ->  ${response}`);
+
+        if(response.message === "Habit restarted"){
+            return response.message;    
+        }
+
+        return rejectWithValue(response.message);
     }catch(error){
         return rejectWithValue('Failed to mark habit as done');
-    }
-    
+    }    
 });
 
 export const calculateProgress = (days: number): string => {
@@ -72,7 +97,7 @@ const habitSlice = createSlice({
         getHabits: (state, action) => {
             state.habits = action.payload;
         },
-        addHabit: (state, action) => {
+        createHabit: (state, action) => {
             state.habits.push(action.payload);
         },
         removeHabit: (state, action) => {
@@ -80,17 +105,23 @@ const habitSlice = createSlice({
         }
     },
     extraReducers: (builder) => {
-        builder.addCase(fetchHabitsThunk.fulfilled, (state, action) => {
+        builder
+        .addCase(fetchHabitsThunk.fulfilled, (state, action) => {
             state.habits = action.payload;
-        }).addCase(markAsDoneThunk.fulfilled, (state, action) => {
+        })
+        .addCase(markAsDoneThunk.fulfilled, (state, action) => {
             state.status[action.meta.arg] = 'success';
             state.error[action.meta.arg] = null;
-        }).addCase(markAsDoneThunk.rejected, (state, action) => {
+        })
+        .addCase(markAsDoneThunk.rejected, (state, action) => {
             state.status[action.meta.arg] = 'failed';
             state.error[action.meta.arg] = action.payload as string;
+        })
+        .addCase(addHabitThunk.fulfilled, (state, action) => {
+            state.habits.push(action.payload);
         })
     }
 });
 
-export const { getHabits, addHabit, removeHabit } = habitSlice.actions;
+export const { getHabits, createHabit, removeHabit } = habitSlice.actions;
 export default habitSlice.reducer;
