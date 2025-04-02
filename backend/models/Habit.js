@@ -27,6 +27,11 @@ const habitSchema = new mongoose.Schema({
     days: {
         type: Number,
         default: 1
+    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
     }
 });
 

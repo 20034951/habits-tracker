@@ -1,6 +1,34 @@
 var express = require('express');
 const Habit = require('../models/Habit');
+const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
 var router = express.Router();
+
+const timeDifferenceInHours = (date1, date2) => {
+  const differenceMS = Math.abs(date1 - date2);
+  return differenceMS / (1000 * 3600);
+}
+
+const authenticateToken = (req, res, next) => {
+  const token = req.header('Authorization');
+  if(!token){
+    return res.status(401).json({error: 'Access denied. No token'})
+  }
+  try{
+    const tokenWithoutBearer = token.replace('Bearer ', '');
+    const verified = jwt.verify(tokenWithoutBearer, process.env.JWT_SECRET);
+    req.user = verified;
+    next();
+  }catch(error){
+    console.error(`Error validating token ${error}`);
+    res.status(403).json({error: 'Invalid or expired token'});
+  }
+}
+
+const getUserId = (req, errorMessage) => {
+  let userId = req.user && req.user.userId ? req.user.userId : res.status(500).json({error: errorMessage});
+  return new mongoose.Types.ObjectId(userId);
+}
 
 
 /* GET home page. */
@@ -14,9 +42,10 @@ router.get('/hello', function(req, res, next){
 })
 
 /* GET habits list */
-router.get('/habits', async(req, res) => {
+router.get('/habits', authenticateToken, async(req, res) => {
   try{
-    const habits = await Habit.find();
+    const userId = getUserId(req, 'Error retrieving habits, access denied');
+    const habits = await Habit.find({'userId': userId});
     res.status(200).json(habits);
   }catch(err){
     console.error("Error retrieving habit ->", err);
@@ -25,10 +54,11 @@ router.get('/habits', async(req, res) => {
 });
 
 /* POST habit (CREATE) */
-router.post('/habits', async(req, res) => {
+router.post('/habits', authenticateToken, async(req, res) => {
   try{
+    const userId = getUserId(req, 'Error creating habit, access denied');
     const {title, description} = req.body;
-    const habit = new Habit({title, description});
+    const habit = new Habit({title, description, userId});
     await habit.save();
     res.status(201).json(habit);
   }catch(err){
@@ -38,9 +68,11 @@ router.post('/habits', async(req, res) => {
   });
 
 /* DELETE habit by id */
-router.delete('/habits/:id', async(req, res) => {
+router.delete('/habits/:id', authenticateToken, async(req, res) => {
   try{
-    await Habit.findByIdAndDelete(req.params.id);
+    const userId = getUserId(req, 'Error creating habit, access denied');
+    const habitId = req.params.id;
+    await Habit.findByIdAndDelete(habitId, userId);
     res.json({ message : 'Habit deleted' });
   }catch(err){
     console.error("Error deleting habit ->", err);
@@ -49,13 +81,13 @@ router.delete('/habits/:id', async(req, res) => {
 });
 
 /* UPDATE habit by id (SET DONE) */
-router.patch('/habits/done/:id', async(req, res) => {
+router.patch('/habits/done/:id', authenticateToken, async(req, res) => {
   try{
     const habit = await Habit.findById(req.params.id);
     let message = 'Habit marked as done';
     
     if(timeDifferenceInHours(habit.lastDone, habit.lastUpdate) < 24){
-      habit.days += 1;//timeDifferenceInDays(habit.lastDone, habit.startedAt);
+      habit.days += 1;
     }else{
       habit.days = 1;
       habit.startedAt = new Date();
@@ -73,10 +105,5 @@ router.patch('/habits/done/:id', async(req, res) => {
     res.status(500).json({ error: 'Error setting habit to done' })
   }
 })
-
-const timeDifferenceInHours = (date1, date2) => {
-  const differenceMS = Math.abs(date1 - date2);
-  return differenceMS / (1000 * 3600);
-}
 
 module.exports = router;
