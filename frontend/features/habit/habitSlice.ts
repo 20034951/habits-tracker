@@ -13,7 +13,7 @@ type Habit = {
 }
 
 type MarkHabitAsDoneParams = {
-    _id: string,
+    id: string,
     token: string
 }
 
@@ -57,9 +57,9 @@ export const addHabitThunk = createAsyncThunk('habit/addHabit', async ({token, t
     }    
 });
 
-export const markAsDoneThunk = createAsyncThunk('habit/done', async ({_id, token} : MarkHabitAsDoneParams, { rejectWithValue }) => {
+export const markAsDoneThunk = createAsyncThunk('habit/done', async ({id, token} : MarkHabitAsDoneParams, { rejectWithValue }) => {
     try{
-        const response = await markHabitAsDone(_id, token);
+        const response = await markHabitAsDone(id, token);
         console.log(`response markAsDoneThunk  habitSlice ->  ${response}`);
 
         if(response.message === "Habit restarted"){
