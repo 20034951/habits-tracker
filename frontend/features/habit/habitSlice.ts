@@ -111,11 +111,11 @@ const habitSlice = createSlice({
             state.habits = action.payload;
         })
         .addCase(markAsDoneThunk.fulfilled, (state, action) => {
-            state.status[action.meta.arg] = 'success';
+            state.status[action.meta.arg.habitId] = 'success';
             state.error[action.meta.arg] = null;
         })
         .addCase(markAsDoneThunk.rejected, (state, action) => {
-            state.status[action.meta.arg] = 'failed';
+            state.status[action.meta.arg.habitId] = 'failed';
             state.error[action.meta.arg] = action.payload as string;
         })
         .addCase(addHabitThunk.fulfilled, (state, action) => {
