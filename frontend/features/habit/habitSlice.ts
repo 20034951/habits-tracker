@@ -10,6 +10,7 @@ type Habit = {
     startedAt: string;
     lastUpdate: string;
     lastDone: string;
+    userId: number;
 }
 
 type MarkHabitAsDoneParams = {
