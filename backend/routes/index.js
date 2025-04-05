@@ -33,7 +33,7 @@ const getUserId = (req, errorMessage) => {
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.json({ title: 'Express' });
 });
 
 /* GET hello page. */
