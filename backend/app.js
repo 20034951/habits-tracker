@@ -11,7 +11,7 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 app.use(cors({
-  origin: "https://frontend-5yect8vhw-pabloalfonsovargas-20034951s-projects.vercel.app", // Allow only your frontend
+  origin: "https://frontend-npgejpj70-pabloalfonsovargas-20034951s-projects.vercel.app", // Allow only your frontend
   credentials: true, // Allow cookies & auth headers
   methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
   allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
