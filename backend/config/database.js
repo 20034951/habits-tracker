@@ -2,8 +2,9 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
+    //useNewUrlParser: true,
+    //useUnifiedTopology: true
+    serverSelectionTimeoutMS: 5000, // Prevents long MongoDB connection delays
 }).then(() => {
     console.log('Database connected')
 }).catch((err) => {

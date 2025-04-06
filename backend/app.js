@@ -17,10 +17,14 @@ app.use(cors({
   methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
   allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
   */
-  origin: "https://frontend-liart-two-91.vercel.app",
-  methods: "GET,POST,PUT,DELETE",
+  origin: "https://frontend-liart-two-91.vercel.app", // Change to your frontend domain
+  methods: "GET,POST,PUT,DELETE,OPTIONS",
+  allowedHeaders: "Content-Type,Authorization",
   credentials: true
 }));
+
+// Handle preflight requests manually (important for Vercel!)
+app.options('*', cors());
 
 app.use(logger('dev'));
 app.use(express.json());
