@@ -11,10 +11,15 @@ var usersRouter = require('./routes/users');
 
 var app = express();
 app.use(cors({
+  /*
   origin: "https://frontend-liart-two-91.vercel.app", // Allow only your frontend
   credentials: true, // Allow cookies & auth headers
   methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
   allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
+  */
+  origin: "https://frontend-liart-two-91.vercel.app",
+  methods: "GET,POST,PUT,DELETE",
+  credentials: true
 }));
 
 app.use(logger('dev'));
