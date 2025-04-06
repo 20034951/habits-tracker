@@ -38,6 +38,7 @@ const initialState: HabitState = {
 }
 
 export const fetchHabitsThunk = createAsyncThunk('habit/fetchHabits', async (token : string) => {
+    console.log(`response fetchHabitsThunk token ->  ${token}`);
     const response = await fetchHabits(token);
     console.log(`response fetchHabitsThunk habitSlice ->  ${response}`);
     return response;

@@ -52,12 +52,11 @@ export const loginUserThunk = createAsyncThunk('user/loginUser', async ({usernam
         console.log(`response loginUserThunk userSlice -> ${response}`);
 
         if(response.message === 'Login successful'){
-            return response;
+            return response.token;
         }else{
             rejectWithValue(response.error);
         }
     }catch(err){
-        
         console.log(`Failed to login -> ${err}`);
         rejectWithValue('Failed to login');
     }
