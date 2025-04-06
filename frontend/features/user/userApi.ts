@@ -1,5 +1,5 @@
 export const registerUser = async (username: string, password: string) => {
-    const response = await fetch("https://backend-6tz3pli8q-pabloalfonsovargas-20034951s-projects.vercel.app/users/register", {
+    const response = await fetch("https://backend-dhrvm5efm-pabloalfonsovargas-20034951s-projects.vercel.app/users/register", {
         method: "POST",
         headers: {
             "Content-Type" : "application/json"
@@ -18,7 +18,7 @@ export const registerUser = async (username: string, password: string) => {
 }
 
 export const loginUser = async (username: string, password: string) => {
-    const response = await fetch("https://backend-6tz3pli8q-pabloalfonsovargas-20034951s-projects.vercel.app/users/login", {
+    const response = await fetch("https://backend-dhrvm5efm-pabloalfonsovargas-20034951s-projects.vercel.app/users/login", {
         method: "POST",
         credentials: "include",
         headers: {

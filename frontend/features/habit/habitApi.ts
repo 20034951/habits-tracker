@@ -1,5 +1,5 @@
 export const fetchHabits = async(token : string) => {
-    const response = await fetch('https://backend-6tz3pli8q-pabloalfonsovargas-20034951s-projects.vercel.app/habits', {
+    const response = await fetch('https://backend-dhrvm5efm-pabloalfonsovargas-20034951s-projects.vercel.app/habits', {
         headers : {
             Authorization : `Bearer ${token}`
         }
@@ -13,7 +13,7 @@ export const fetchHabits = async(token : string) => {
 }
 
 export const addHabit = async(token : string, title : string, description : string) => {
-    const response = await fetch('https://backend-6tz3pli8q-pabloalfonsovargas-20034951s-projects.vercel.app/habits', {
+    const response = await fetch('https://backend-dhrvm5efm-pabloalfonsovargas-20034951s-projects.vercel.app/habits', {
         method: 'POST',
         headers : {
             Authorization : `Bearer ${token}`,
@@ -33,7 +33,7 @@ export const addHabit = async(token : string, title : string, description : stri
 }
 
 export const markHabitAsDone = async(id: string, token: string) => {
-    const response = await fetch(`https://backend-6tz3pli8q-pabloalfonsovargas-20034951s-projects.vercel.app/habits/done/${id}`, {
+    const response = await fetch(`https://backend-dhrvm5efm-pabloalfonsovargas-20034951s-projects.vercel.app/habits/done/${id}`, {
         method: 'PATCH',
         headers : {
             Authorization : `Bearer ${token}`,
